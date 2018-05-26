@@ -18,6 +18,16 @@ public class PlayerStorage {
         this.playerListByName.add(p); // O(log n)
     }
 
+    public synchronized void removePlayer(Player p) {
+        if (this.playerListById.contains(p)) {
+            this.playerListById.remove(p);
+        }
+
+        if (this.playerListByName.contains(p)) {
+            this.playerListByName.remove(p);
+        }
+    }
+
     public synchronized List<Player> getPlayerListById() {
         return playerListById;
     }

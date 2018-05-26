@@ -8,7 +8,7 @@ import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.List;
+import java.util.Collection;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -32,15 +32,18 @@ public class PlayerResource {
     }
 
     @GET
-    public List<Player> getAllPlayers(@QueryParam("sort") Optional<String> sortBy) {
+    public Collection<Player> getAllPlayers(@QueryParam("sort") Optional<String> sortBy) {
         if (sortBy.isPresent()) {
-            if (sortBy.get().equals("name")) {
-                return playersDb.getPlayerListSortedByName();
-            } else {
-                return playersDb.getPlayerList();
+            switch (sortBy.get()) {
+                case "name":
+                    return playersDb.getPlayerListByName();
+                case "id":
+                    return playersDb.getPlayerListById();
+                default:
+                    throw new WebApplicationException("sort type is not supported", Response.Status.NOT_FOUND);
             }
         }
 
-        return playersDb.getPlayerList();
+        return playersDb.getPlayerListById();
     }
 }

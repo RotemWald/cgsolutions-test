@@ -2,27 +2,27 @@ package solutions.cg.devtask.db;
 
 import solutions.cg.devtask.core.Player;
 
-import java.util.Comparator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.*;
 
 public class PlayerStorage {
-    private List<Player> playerList;
+    private List<Player> playerListById;
+    private SortedSet<Player> playerListByName;
 
     public PlayerStorage() {
-        this.playerList = new LinkedList<>();
+        this.playerListById = new LinkedList<>();
+        this.playerListByName = new TreeSet<>(Comparator.comparing(Player::getName));
     }
 
     public synchronized void addPlayer(Player p) {
-        this.playerList.add(p);
+        this.playerListById.add(p); // O(1)
+        this.playerListByName.add(p); // O(log n)
     }
 
-    public synchronized List<Player> getPlayerList() {
-        return playerList;
+    public synchronized List<Player> getPlayerListById() {
+        return playerListById;
     }
 
-    public synchronized List<Player> getPlayerListSortedByName() {
-        return playerList.stream().sorted(Comparator.comparing(Player::getName)).collect(Collectors.toList());
+    public synchronized SortedSet<Player> getPlayerListByName() {
+        return playerListByName;
     }
 }
